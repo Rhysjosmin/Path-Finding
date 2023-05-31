@@ -29,7 +29,7 @@ def PointsFromImage(image):
     lines_list = []
     lines = cv2.HoughLinesP(edges,1,np.pi/180,threshold=100,minLineLength=0,maxLineGap=10000)
 
-                
+
 
     for points in lines:
         x1, y1, x2, y2 = points[0]
