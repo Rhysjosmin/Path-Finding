@@ -1,60 +1,42 @@
 from skimage.morphology import skeletonize
-from skimage import data
-import matplotlib.pyplot as plt
 from skimage.util import invert
 import cv2
 import numpy as np
-# Invert the horse image
-# image = invert(data.horse())
-# print(image)
 
-image=cv2.imread('Input.jpg')
+def ToSkeleton(image):
+    image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+    
+    height=image.shape[0]
+    width=image.shape[1]
+    Ratio=height/1000
+    image=cv2.resize(image,(int(width/Ratio),int(height/Ratio)))
+    
+    # kernel = np.array([[-1,-1,-1], [-1,9,-1], [-1,-1,-1]])
+    # image = cv2.filter2D(image, -1, kernel)
+    
+ 
 
-# image
-image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+    # cv2.imwrite('imageSharp.jpg',image)
+    image=invert(image)
+    skeleton = skeletonize(image)
+    skeleton=np.array(skeleton)
+    skeleton=cv2.cvtColor(skeleton,cv2.COLOR_RGB2GRAY)
+    skeleton=invert(skeleton)
+    return skeleton
 
-height=image.shape[0]
-width=image.shape[1]
-Ratio=height/540
+def PointsFromImage(image):
+    edges = cv2.Canny(image, 50, 150, apertureSize=3)
+    lines_list = []
+    lines = cv2.HoughLinesP(edges,1,np.pi/180,threshold=100,minLineLength=0,maxLineGap=10000)
 
+                
 
-image=cv2.resize(image,(int(width/Ratio),int(height/Ratio)))
-OgImage=cv2.resize(image,(int(width/Ratio),int(height/Ratio)))
-
-# kernelSizes = [(3, 3), (9, 9), (15, 15)]
-
-# image=cv2.blur(image, (100, 100))
-# image=cv
-OgImage=image
-image=invert(image)
-
-skeleton = skeletonize(image)
-
-skeleton=np.array(skeleton)
-skeleton=cv2.cvtColor(skeleton,cv2.COLOR_RGB2GRAY)
-
-
-skeleton=invert(skeleton)
-image=invert(image)
-# fig, axes = plt.subplots(nrows=1, ncols=3, figsize=(8, 4),
-#                          sharex=True, sharey=True)
-
-# ax = axes.ravel()
+    for points in lines:
+        x1, y1, x2, y2 = points[0]
+        radius = 4
+        cv2.ellipse(image, (x1, y1), (radius, radius), 0, 0, 360, (0, 0, 255), 1)
+        cv2.ellipse(image, (x2, y2), (radius, radius), 0, 0, 360, (0, 0, 255), 1)
+        lines_list.append([(x1, y1), (x2, y2)])
+    return(image,lines)
 
 
-# ax[0].imshow(OgImage, cmap=plt.cm.gray)
-# ax[0].axis('off')
-# ax[0].set_title('original', fontsize=20)
-
-# ax[1].imshow(skeleton, cmap=plt.cm.gray)
-# ax[1].axis('off')
-# ax[1].set_title('skeleton', fontsize=20)
-
-# # ax[2].imshow(skeleton+OgImage, cmap=plt.cm.gray)
-# # ax[2].axis('off')
-# # ax[2].set_title('skeleton2', fontsize=20)
-
-# fig.tight_layout()
-# plt.show()
-# cv2.imwrite('op.jpg',image)
-cv2.imwrite('Output.jpg',skeleton)

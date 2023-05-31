@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/p5.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/p5.js/1.6.0/addons/p5.sound.min.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    
+</body>
+<style>
+    *{
+        margin: 0;
+        padding: 0;
+    }
+</style>
+<script>
+function setup() {
+    saved=0
+    // width=window.innerWidth
+    // height=window.innerHeight
+    width=500
+    height=500
+ _Canvas= createCanvas(width, height);
+    background(255)
+  stroke(0);
+  X=[]
+Y=[]
+len=10
+for (let index = 0; index < 6; index++) {
+    X.push((Math.random()*400)+50)
+    Y.push((Math.random()*400)+50)
+}
+Y.push(Y[0])
+X.push(X[0])
+console.log(X)
+console.log(Y)
+
+i=0
+}
+
+function draw() {
+
+i++
+if(i<len*4){
+    strokeWeight(4);
+    // strokeWeight(Math.random()*20);
+
+      line(X[Math.round(Math.random()*len)], Y[Math.round(Math.random()*len)], X[Math.round(Math.random()*len)], Y[Math.round(Math.random()*len)]);
+}if(i==len*4 && saved==0){
+    // _Canvas.save('p','.png')
+    saved=1
+    saveCanvas(_Canvas, 'myCanvas', 'png');
+}
+
+}
+
+</script>
+</html>
