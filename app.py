@@ -8,20 +8,10 @@ Images=(os.listdir(os.path.join('Images',"Input")))
 
 for Img in Images:
     image=cv2.imread(os.path.join('Images','Input',Img))
-    # image=ToSkeleton(image)
-    for x in range(2):
-        m=10
-        image=cv2.blur(image, (m,m)) 
-        image=cv2.erode(image, np.ones((5, 5), np.uint8), iterations=10)
-        # image=ToSkeleton(image)
-        # cv2.imwrite(f'Images/Output/{x}{Img}',image)
     image=ToSkeleton(image)
-    # cv2.imwrite(f'Images/Output/P{Img}',image)
-        
-
     PFromImg,Lines=PointsFromImage(image)
- 
-    # Canvas=image
+
+
     
     Canvas=np.zeros((image.shape[0],image.shape[1],3),np.uint8)
     for Point in Lines:
