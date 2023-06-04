@@ -1,13 +1,20 @@
+import random
 from skimage.morphology import skeletonize
 from skimage.util import invert
 import cv2
 import numpy as np
-
+from PIL import ImageDraw,Image
+ogWidth=0
+ogHeight=0
 def ToSkeleton(image):
-    image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
-    
+    global ogWidth,ogHeight
+    # image=cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+    # print(image)
+    # print('----')
     height=image.shape[0]
     width=image.shape[1]
+    ogWidth=width
+    ogHeight=height
     Ratio=height/64
     image=cv2.resize(image,(int(width/Ratio),int(height/Ratio)))
     
@@ -63,21 +70,10 @@ def PointsFromImage2(image):
                         lines_list.append([c,r])
                         
                     else:
-                        i2[r][c]=255
-                        # pass
-                        
+                        i2[r][c]=255                       
                 else:
-                    # i2[r][c]=255
-                    
                     pass
-                    # print(image[r][c])
-                    # lines_list.append([c,r])
-            # i2=cv2.blur(i2,(1,1))
-
-     
-                    
-
-            # print(f'Row:{r},Column:{c},Element:{element}')
+    
     ListOfPoints=np.copy(lines_list)
     MaxDist=4
     print(NewLines)
@@ -90,17 +86,18 @@ def PointsFromImage2(image):
             print(j)
             j+=1
             other=ListOfPoints[j]
-            if((abs(points[0]-other[0]))<MaxDist) and ((abs(points[1]-other[1]))<MaxDist):
-                c=int(np.floor((points[0]+other[0])/2))
-                r=int(np.floor((points[1]+other[1])/2))
-                # print(NewLines)
-                NewLines.append([points[0],points[1]])
-                Done.append([points[0],points[1]])
-                Done.append([other[0],other[1]])
-            if(i==j):
-                break
             if [points[0],points[1]] in Done:
                 break
+            else:
+                if((abs(points[0]-other[0]))<MaxDist) and ((abs(points[1]-other[1]))<MaxDist):
+                    c=int(np.floor((points[0]+other[0])/2))
+                    r=int(np.floor((points[1]+other[1])/2))
+                    NewLines.append([points[0],points[1]])
+                    Done.append([points[0],points[1]])
+                    Done.append([other[0],other[1]])
+                if(i==j):
+                    break
+          
             
                 
         i+=1
@@ -110,24 +107,22 @@ def PointsFromImage2(image):
     print((NewLines))
     print('----')
     print((lines_list))
-    
+    # i2=cv2.resize(np.ones((ogWidth,ogHeight)),(ogWidth,ogHeight),interpolation=cv2.INTER_NEAREST)
+    i2=cv2.resize(image,(ogWidth,ogHeight),interpolation=cv2.INTER_NEAREST)
+    RatioW=int(ogHeight/ogWidth)*30
+    RatioH=int(ogHeight/ogWidth)*30
+    # f=10
+    Chosen=[]
     for points in NewLines:
-        cv2.circle(i2,(points[0],points[1]),1,(0,255,0),1)
-        for p2 in NewLines:
-            cv2.line(i2,(points[0],points[1]),(p2[0],p2[1]),(0,255,0),1)
-    # print(lines_list)
-    cv2.imwrite('edges.jpg',image)
-    cv2.imwrite('edges2.jpg',i2)
-    # print(dest.shape)
-    # print(lines.shape)
-
-    # for points in lines:
-    #     x1, y1, x2, y2 = points[0]
-    #     radius = 4
-    #     cv2.ellipse(image, (x1, y1), (radius, radius), 0, 0, 360, (0, 0, 255), 1)
-    #     cv2.ellipse(image, (x2, y2), (radius, radius), 0, 0, 360, (0, 0, 255), 1)
-    #     lines_list.append([(x1, y1), (x2, y2)])
-    return(image,lines)
+        cv2.circle(i2,(points[0]*RatioH,points[1]*RatioW),20,(0,255,0),1)
+        for p2 in NewLines: 
+            if(random.random()<random.random()):
+                cv2.line(i2,(points[0]*RatioH,points[1]*RatioW),(p2[0]*RatioH,p2[1]*RatioW),(0,255,0),1)
+                Chosen.append([points[0]*RatioH,points[1]*RatioW])
+                Chosen.append([p2[0]*RatioH,p2[1]*RatioW])
+  
+    # cv2.imwrite('imTex.png',i2)
+    return(i2,Chosen)
 
 
 

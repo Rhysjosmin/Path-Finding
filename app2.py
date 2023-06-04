@@ -3,7 +3,7 @@ import numpy as np
 from Functions.ToSkeleton.app import *
 
 
-Image=cv2.imread('Images/Input/E.png')
+Image=cv2.imread('Images/Input/B.png')
 # Image=cv2.resize(Image,(64,64))
 Image=ToSkeleton(Image)
 

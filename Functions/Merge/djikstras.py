@@ -41,7 +41,7 @@ start_vertex = 0
 distances = dijkstra(graph, start_vertex)
 
 # Display the shortest path distances
-print("Shortest path distances from vertex", start_vertex, "to all other vertices:")
-for i, distance in enumerate(distances):
-    print("Vertex", i, ":", distance)
+# print("Shortest path distances from vertex", start_vertex, "to all other vertices:")
+# for i, distance in enumerate(distances):
+#     print("Vertex", i, ":", distance)
 
