@@ -17,7 +17,7 @@ lottie_code=load_lottieurl("https://assets3.lottiefiles.com/packages/lf20_0lvdwx
 st.title("Shortest Path")
 st.write("The algorithm uses advance image recognisition system to identify the note and the path between them and uses it to calculate and identify the shortest path")
 # st.write("[click to learn more](https://youtu.be/BBJa32lCaaY)")
-# st_lottie(lottie_code,height=300, key="coding")
+# st_lottie(lottjeie_code,height=300, key="coding")
 
 
 # Create a centered button to accept images
